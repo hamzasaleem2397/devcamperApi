@@ -85,7 +85,10 @@ exports.getBootcamp = asyncHandler(
   async (req, res, next) => {
     const bootcamp = await Bootcamps.findById(
       req.params.id,
-    );
+    ).populate({
+      path: "courses",
+      select: "name description",
+    });
     if (!bootcamp) {
       return next(
         new ErrorResponse(

@@ -1,7 +1,9 @@
 const express = require("express");
+const path = require("path");
 const dotenv = require("dotenv");
 const colors = require("colors");
 const morgan = require("morgan");
+const fileupload = require("express-fileupload");
 const errorHandler = require("./middleware/error");
 const connectDb = require("./config/db");
 // load env vars
@@ -10,18 +12,28 @@ dotenv.config({ path: "./config/config.env" });
 connectDb();
 
 //Rotue file
+
 const bootcamps = require("./routes/bootcamps");
 const courses = require("./routes/courses");
 const app = express();
+
 //Body parser
+
 app.use(express.json()); //Without this we get undefined when we consolelog req.body
+
 //Dev logging middleware
+
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
-// app.use(logger);
-//Mount rotuer
 
+//File uploading
+app.use(fileupload());
+
+//Set static folder
+app.use(express.static(path.join(__dirname, "public")));
+
+//Mount rotuer
 app.use("/api/v1/bootcamps", bootcamps);
 app.use("/api/v1/courses", courses);
 

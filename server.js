@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const colors = require("colors");
 const morgan = require("morgan");
 const fileupload = require("express-fileupload");
+const cookieParser = require("cookie-parser");
 const errorHandler = require("./middleware/error");
 const connectDb = require("./config/db");
 // load env vars
@@ -11,15 +12,18 @@ dotenv.config({ path: "./config/config.env" });
 //Connect to database
 connectDb();
 
-//Rotue file
+//Route file
 
 const bootcamps = require("./routes/bootcamps");
 const courses = require("./routes/courses");
+const auth = require("./routes/auth");
 const app = express();
 
 //Body parser
 
 app.use(express.json()); //Without this we get undefined when we consolelog req.body
+//Cookie parser
+app.use(cookieParser());
 
 //Dev logging middleware
 
@@ -34,6 +38,7 @@ app.use(fileupload());
 app.use(express.static(path.join(__dirname, "public")));
 
 //Mount rotuer
+app.use("/api/v1/auth", auth);
 app.use("/api/v1/bootcamps", bootcamps);
 app.use("/api/v1/courses", courses);
 

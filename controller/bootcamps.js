@@ -9,74 +9,7 @@ const Bootcamps = require("../modals/Bootcamps");
 //@access Public
 exports.getBootcamps = asyncHandler(
   async (req, res, next) => {
-    let query;
-    //Cpry req.query
-    const reqQeury = { ...req.query };
-
-    //Field to exclude
-    const removeFields = [
-      "select",
-      "sort",
-      "limit",
-      "page",
-    ];
-
-    //Loop over removeField and delete the from reqQuery
-    removeFields.forEach((param) => delete reqQeury[param]);
-
-    //Create query String
-    let queryStr = JSON.stringify(reqQeury);
-    //Create operation ($gt,$gte, etc)
-    queryStr = queryStr.replace(
-      /\b(gt|gte|lt|lte|in)\b/g,
-      (match) => `$${match}`,
-    );
-    //Finding resource
-    query = Bootcamps.find(JSON.parse(queryStr)).populate({
-      path: "courses",
-      select: "name description",
-    });
-    //SELECT FIELDs
-    if (req.query.select) {
-      const field = req.query.select.split(",").join(" ");
-      query = query.select(field);
-    }
-    //Sort
-    if (req.query.sort) {
-      const sortBy = req.query.sort.split(",").join(" ");
-      query = query.sort(sortBy);
-    } else {
-      query = query.sort("-createdAt");
-    }
-    //Pagination
-    const page = parseInt(req.query.page, 10) || 1;
-    const limit = parseInt(req.query.limit, 10) || 25;
-    const startIndex = (page - 1) * limit;
-    const endIndex = page * limit;
-    const total = await Bootcamps.countDocuments();
-    query = query.skip(startIndex).limit(limit);
-
-    //Excuing query
-    const bootcamps = await query;
-
-    //Pagination result
-    const pagination = {};
-    if (endIndex < total) {
-      pagination.next = { page: page + 1, limit };
-    }
-
-    if (startIndex > 0) {
-      pagination.prev = {
-        page: page - 1,
-        limit,
-      };
-    }
-    res.status(200).json({
-      success: true,
-      count: bootcamps.length,
-      pagination,
-      data: bootcamps,
-    });
+    res.status(200).json(res.advancedResults);
   },
 );
 //@desc Get single bottcamos

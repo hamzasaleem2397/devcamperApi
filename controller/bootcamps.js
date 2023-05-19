@@ -42,6 +42,7 @@ exports.getBootcamp = asyncHandler(
 //@access
 exports.createBootcamp = asyncHandler(
   async (req, res, next) => {
+    console.log(req.body);
     const bootcamp = await Bootcamps.create(req.body);
 
     res.status(201).json({

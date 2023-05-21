@@ -3,7 +3,7 @@ const ErrorResponse = require("../utils/errorResponse");
 const asyncHandler = require("../middleware/async");
 const sendEmail = require("../utils/sendEmail");
 const User = require("../modals/User");
-//@desc register user bottcamos
+//@desc register user
 //@route PODT /api/v1/auth/register
 //@access Public
 exports.register = asyncHandler(async (req, res, next) => {

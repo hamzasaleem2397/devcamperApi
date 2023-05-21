@@ -4,10 +4,11 @@ const errorHandler = (err, req, res, next) => {
   let error = { ...err };
   error.message = err.message;
   // Log to console for dev
-  console.log(error.errors);
+  console.log("error", error);
+
   //Mongoose bad ObjectId
   if (err.name === "CastError") {
-    const message = `Bootcamp not found with id of ${err.value}`;
+    const message = `Result not found with id of ${err.reason.BSONError}`;
     error = new ErrorResponse(message, 404);
   }
   //Mongoose duplicate kkey

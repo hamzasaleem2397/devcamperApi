@@ -26,7 +26,7 @@ exports.getBootcamp = asyncHandler(
     if (!bootcamp) {
       return next(
         new ErrorResponse(
-          `Bootcamp not found with id of ${req.params.id}`,
+          `Bootcamp not found with id  zxxxz of ${req.params.id}`,
           404,
         ),
       );
@@ -81,7 +81,7 @@ exports.updateBootcamp = asyncHandler(
     if (!bootcamp) {
       return next(
         new ErrorResponse(
-          `Bootcamp not found with id of ${req.params.id}`,
+          `Bootcamp not found with id  of ${req.params.id}`,
           404,
         ),
       );

@@ -77,14 +77,7 @@ exports.createBootcamp = asyncHandler(
 //@access Public
 exports.updateBootcamp = asyncHandler(
   async (req, res, next) => {
-    const bootcamp = await Bootcamps.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      {
-        new: true,
-        runValidators: true,
-      },
-    );
+    let bootcamp = await Bootcamps.findById(req.params.id);
     if (!bootcamp) {
       return next(
         new ErrorResponse(
@@ -93,6 +86,30 @@ exports.updateBootcamp = asyncHandler(
         ),
       );
     }
+
+    //Make sure user is bootcamp
+
+    if (
+      bootcamp.user.toString() != req.user.id &&
+      req.user.role !== "admin"
+    ) {
+      return next(
+        new ErrorResponse(
+          `User ${req.params.id} is not authorized to update this bootcamp`,
+          404,
+        ),
+      );
+    }
+
+    bootcamp = await Bootcamps.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
+
     res.status(200).json({ success: true, data: bootcamp });
 
     // res.status(200).send({
@@ -113,6 +130,20 @@ exports.deleteBootcamp = asyncHandler(
       return next(
         new ErrorResponse(
           `Bootcamp not found with id of ${req.params.id}`,
+          404,
+        ),
+      );
+    }
+
+    //Make sure user is bootcamp owner
+
+    if (
+      bootcamp.user.toString() != req.user.id &&
+      req.user.role !== "admin"
+    ) {
+      return next(
+        new ErrorResponse(
+          `User ${req.params.id} is not authorized to delete this bootcamp`,
           404,
         ),
       );
@@ -164,6 +195,19 @@ exports.bootcampPhotoUpload = asyncHandler(
         ),
       );
     }
+    //Make sure user is bootcamp owner
+    if (
+      bootcamp.user.toString() != req.user.id &&
+      req.user.role !== "admin"
+    ) {
+      return next(
+        new ErrorResponse(
+          `User ${req.params.id} is not authorized to update this bootcamp`,
+          404,
+        ),
+      );
+    }
+
     if (!req.files) {
       return next(
         new ErrorResponse("Please upload a file", 404),

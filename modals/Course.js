@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const slufify = require("slugify");
-const { aggregate } = require("./Bootcamps");
+// const { aggregate } = require("./Bootcamps");
 
 const CourseSchema = new mongoose.Schema({
   title: {
@@ -77,7 +77,7 @@ CourseSchema.post("save", function () {
   this.constructor.getAverageCost(this.bootcamp);
 });
 //Call getAverageCost before remove
-CourseSchema.remove(
+CourseSchema.pre(
   "deleteOne",
   { document: true },
   function () {

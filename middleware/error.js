@@ -8,7 +8,7 @@ const errorHandler = (err, req, res, next) => {
 
   //Mongoose bad ObjectId
   if (err.name === "CastError") {
-    const message = `Result not found with id of ${err.reason.BSONError}`;
+    const message = `Resource not found with id of ${req.params.id}`;
     error = new ErrorResponse(message, 404);
   }
   //Mongoose duplicate kkey

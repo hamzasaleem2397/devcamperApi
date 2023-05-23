@@ -99,7 +99,7 @@ exports.updateReview = asyncHandler(
       );
     }
 
-    review = await Reviews.findOneAndUpdate(
+    review = await Reviews.findByIdAndUpdate(
       req.params.id,
       req.body,
       {
@@ -110,6 +110,41 @@ exports.updateReview = asyncHandler(
     res.status(200).json({
       success: true,
       data: review,
+    });
+  },
+);
+
+//@desc Delete reviews
+//@route Delete /api/v1/reviews/:id
+//@access Private
+exports.deleteReview = asyncHandler(
+  async (req, res, next) => {
+    const review = await Reviews.findById(req.params.id);
+    if (!review) {
+      return next(
+        new ErrorResponse(
+          `No review with the id of ${req.params.id}`,
+          404,
+        ),
+      );
+    }
+    //Make sure reviews belongs to user or user is admin
+    if (
+      review.user.toString() !== req.user.id &&
+      req.user.id !== "admin"
+    ) {
+      return next(
+        new ErrorResponse(
+          `Not authorized to update review `,
+          401,
+        ),
+      );
+    }
+
+    await review.deleteOne();
+    res.status(200).json({
+      success: true,
+      data: {},
     });
   },
 );

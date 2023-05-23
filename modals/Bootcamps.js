@@ -9,7 +9,7 @@ const BootcampSchema = new mongoose.Schema(
       unique: true,
       trim: true,
       maxLength: [
-        50,
+        70,
         "Name can not be more than 50 characters",
       ],
     },

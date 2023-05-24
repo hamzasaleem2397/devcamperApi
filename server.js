@@ -57,7 +57,7 @@ app.use(cors());
 //Rate Limiting
 const limiter = rateLimit({
   windowMS: 10 * 60 * 100, // 10 mins
-  max: 100,
+  max: 1,
 });
 app.use(limiter);
 
@@ -73,7 +73,11 @@ app.use("/api/v1/bootcamps", bootcamps);
 app.use("/api/v1/courses", courses);
 app.use("/api/v1/users", users);
 app.use("/api/v1/reviews", reviews);
-
+app.get("/", (req, res) => {
+  res.redirect(
+    "https://documenter.getpostman.com/view/15368681/2s93m4Xhb1",
+  );
+});
 app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 
